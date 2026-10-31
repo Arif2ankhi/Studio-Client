@@ -128,3 +128,19 @@
     @apply font-sans;
   }
 }
+
+/* Swiper (hero slider) — pagination bullets sit over photography, so they
+   stay white and expand into an amber pill when active. */
+.hero-swiper .swiper-pagination-bullet {
+  background: #fff;
+  opacity: 0.4;
+  transition:
+    opacity 0.2s ease,
+    width 0.2s ease;
+}
+.hero-swiper .swiper-pagination-bullet-active {
+  background: #f59e0b;
+  opacity: 1;
+  width: 1.5rem;
+  border-radius: 9999px;
+}
