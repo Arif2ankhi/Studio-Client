@@ -95,12 +95,12 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 />
               }
             >
-              {/* <Avatar className="h-10 w-10">
+              <Avatar className="h-10 w-10">
                 <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                   {user.name?.slice(0, 2).toUpperCase() || "US"}
                 </AvatarFallback>
-              </Avatar> */}
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel className="font-normal">
@@ -111,7 +111,8 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  render={<Link href="/dashboard" className="flex items-center cursor-pointer" />}
+                  // render={<Link href="/dashboard" className="flex items-center cursor-pointer" />}
+                  render={<Link href="/" className="flex items-center cursor-pointer" />}
                 >
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Dashboard

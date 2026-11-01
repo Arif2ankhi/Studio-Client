@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link"
 import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 
 export default function LoginPage() {
@@ -33,10 +34,12 @@ const handleEmailLogin = async(e: React.SubmitEvent<HTMLElement>) =>{
         ...user,
     })
     if(data){
+        toast.success(" User Signed  successful!");
         redirect('/')
         // console.log(data);
     }
     if(error){
+        toast.error("Signin failed. Please try again.");
         console.log(error);
     }
 
