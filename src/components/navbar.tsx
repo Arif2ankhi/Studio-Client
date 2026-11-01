@@ -8,6 +8,7 @@ import {
   CirclePlus,
   Heart,
   LayoutGrid,
+  Link,
   LogOut,
 } from "lucide-react"
 import { cn } from "cn"
@@ -103,12 +104,16 @@ export function Navbar() {
                   <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
+                <Link href="/add-studio">
+                 <DropdownMenuItem
                   className="gap-2.5 bg-amber-50 px-2.5 py-2 text-amber-600 hover:bg-amber-100 hover:text-amber-700 focus:bg-amber-100! focus:text-amber-700! dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 dark:focus:bg-amber-500/20! dark:focus:text-amber-300!"
                 >
                   <CirclePlus />
                   Add New Studio
                 </DropdownMenuItem>
+
+                </Link>
+               
                 <DropdownMenuItem className="gap-2.5 px-2.5 py-2">
                   <LayoutGrid />
                   My Studio Listings

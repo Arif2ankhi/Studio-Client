@@ -1,8 +1,10 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
+// import Script from "next/script";
 import { Navbar } from "@/components/navbar";
 import "./globals.css";
+import { Footer } from "@/components/shared/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,17 +29,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         {/* Applies the persisted theme before hydration to avoid a flash of the wrong theme. */}
-        <Script
+        {/* <Script
           id="theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `try{if(localStorage.getItem("studio-theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}`,
           }}
-        />
+        /> */}
         <Navbar />
+        
         {children}
+        <Footer />
       </body>
     </html>
   );

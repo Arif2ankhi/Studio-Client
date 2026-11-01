@@ -117,7 +117,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                   Dashboard
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  render={<Link href="/studios/new" className="flex items-center cursor-pointer" />}
+                  render={<Link href="/add-studio" className="flex items-center cursor-pointer" />}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Add New Studio
@@ -203,7 +203,8 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 </div>
                 <div className="grid grid-cols-1 gap-1 text-sm font-medium pt-1">
                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Dashboard</Link>
-                  <Link href="/studios/new" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link>
+                  {/* <Link href="/studios/new" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link> */}
+                  <Link href="/add-studio" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link>
                   <Link href="/my-listings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">My Studio Listings</Link>
                   <Link href="/my-bookings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">My Bookings</Link>
                   <button onClick={() => { onLogout?.(); setMobileMenuOpen(false); }} className="px-3 py-2 rounded-md text-left text-destructive hover:bg-destructive/10">Logout</button>

@@ -15,6 +15,7 @@ export default function Home() {
   return (
     <main className="flex-1">
       <HeroSlider />
+      
       {/* Streamed: the hero renders instantly while the studio query resolves. */}
       <Suspense fallback={<FeaturedStudiosSkeleton />}>
         <FeaturedStudios />
