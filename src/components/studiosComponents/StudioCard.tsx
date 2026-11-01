@@ -73,7 +73,7 @@ export const StudioCard = ({ studio }: StudioCardProps) => {
             asChild
             className="w-full bg-blue-500 hover:opacity-90 text-white border-none shadow-lg shadow-brand-pink/20 group/btn"
           >
-            <Link href={`/studios/${studio.id}`}>
+            <Link href={`/studios/${studio._id}`}>
               <span>View Details</span>
               {/* <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" /> */}
             </Link>
