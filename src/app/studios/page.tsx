@@ -206,7 +206,7 @@ export default function ExploreStudiosPage() {
             </div>
             <h2 className="text-xl font-bold">No studios found</h2>
             <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-              We couldn't find any studio matching your current search or category filter.
+              We could not find any studio matching your current search or category filter.
             </p>
             <Button onClick={clearFilters} variant="outline" className="mt-4 text-xs font-semibold">
               Reset Filters

@@ -95,12 +95,12 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 />
               }
             >
-              <Avatar className="h-10 w-10">
+              {/* <Avatar className="h-10 w-10">
                 <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                   {user.name?.slice(0, 2).toUpperCase() || "US"}
                 </AvatarFallback>
-              </Avatar>
+              </Avatar> */}
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel className="font-normal">
@@ -144,8 +144,8 @@ export function Navbar({ user, onLogout }: NavbarProps) {
           ) : (
             /* Unauthenticated State */
             <div className="flex items-center gap-2">
-              <Button variant="ghost" render={<Link href="/login" />}>
-                Login
+              <Button variant="ghost" render={<Link href="/signin" />}>
+                Signin
               </Button>
               <Button render={<Link href="/register" />}>
                 Register
@@ -204,7 +204,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
                 <div className="grid grid-cols-1 gap-1 text-sm font-medium pt-1">
                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Dashboard</Link>
                   {/* <Link href="/studios/new" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link> */}
-                  <Link href="/add-studio" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link>
+                  <Link href="/" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">Add New Studio</Link>
                   <Link href="/my-listings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">My Studio Listings</Link>
                   <Link href="/my-bookings" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2 rounded-md hover:bg-accent">My Bookings</Link>
                   <button onClick={() => { onLogout?.(); setMobileMenuOpen(false); }} className="px-3 py-2 rounded-md text-left text-destructive hover:bg-destructive/10">Logout</button>
@@ -212,15 +212,20 @@ export function Navbar({ user, onLogout }: NavbarProps) {
               </div>
             ) : (
               <div className="flex flex-col gap-2 pt-1">
+
+                <Link href="/signin"> 
                 <Button
                   variant="outline"
-                  render={<Link href="/login" onClick={() => setMobileMenuOpen(false)} />}
+                  render={<Link href="/signin" onClick={() => setMobileMenuOpen(false)} />}
                   className="w-full"
                 >
-                  Login
+                  Signin
                 </Button>
+                
+                </Link>
+                
                 <Button
-                  render={<Link href="/register" onClick={() => setMobileMenuOpen(false)} />}
+                  render={<Link href="/registration" onClick={() => setMobileMenuOpen(false)} />}
                   className="w-full"
                 >
                   Register

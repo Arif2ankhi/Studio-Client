@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 
-const DeleteStudioDialog = ({ id }) => {
+const DeleteStudioDialog = ({ id }: { id: string }) => {
   const handleDeleteStudio = async () => {
     const res = await fetch(`http://localhost:8000/studio/${id}`, {
       method: "DELETE"

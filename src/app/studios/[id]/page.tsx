@@ -1,20 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  MapPin, 
-  Users, 
-  DollarSign, 
-  Check, 
-  User, 
-  ShieldCheck, 
-  ArrowLeft, 
-  Star, 
-  ChevronLeft, 
-  ChevronRight, 
-  Pencil, 
-  Trash2, 
+import {
+  MapPin,
+  Users,
+
+  Check,
+  User,
+  ShieldCheck,
+  ArrowLeft,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  
   Calendar,
   Loader2
 } from "lucide-react";
@@ -51,7 +50,8 @@ const MOCK_REVIEWS = [
     role: "Commercial Photographer",
     rating: 5,
     date: "2 weeks ago",
-    comment: "Incredible space! The daylight and ceiling height made our editorial shoot seamless.",
+    comment:
+      "Incredible space! The daylight and ceiling height made our editorial shoot seamless."
   },
   {
     id: "2",
@@ -59,8 +59,8 @@ const MOCK_REVIEWS = [
     role: "Podcast Host",
     rating: 5,
     date: "1 month ago",
-    comment: "Super smooth check-in process and top-notch acoustic treatment.",
-  },
+    comment: "Super smooth check-in process and top-notch acoustic treatment."
+  }
 ];
 
 export default function StudioDetailsPage() {
@@ -103,38 +103,43 @@ export default function StudioDetailsPage() {
   };
 
   const handlePrevImage = () => {
-    setActiveImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    setActiveImageIndex(
+      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length
+    );
   };
 
   // Delete Studio Handler
-  const handleDeleteStudio = async () => {
-    if (!confirm("Are you sure you want to delete this studio listing?")) return;
+  // const handleDeleteStudio = async () => {
+  //   if (!confirm("Are you sure you want to delete this studio listing?"))
+  //     return;
 
-    setIsDeleting(true);
-    try {
-      const res = await fetch(`http://localhost:8000/studio/${id}`, {
-        method: "DELETE",
-      });
+  //   setIsDeleting(true);
+  //   try {
+  //     const res = await fetch(`http://localhost:8000/studio/${id}`, {
+  //       method: "DELETE"
+  //     });
 
-      if (res.ok) {
-        toast.success("Studio deleted successfully!");
-        router.push("/studios");
-      } else {
-        toast.error("Failed to delete studio.");
-      }
-    } catch (error) {
-      console.error("Delete error:", error);
-      toast.error("An error occurred while deleting.");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  //     if (res.ok) {
+  //       toast.success("Studio deleted successfully!");
+  //       router.push("/studios");
+  //     } else {
+  //       toast.error("Failed to delete studio.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Delete error:", error);
+  //     toast.error("An error occurred while deleting.");
+  //   } finally {
+  //     setIsDeleting(false);
+  //   }
+  // };
 
   if (loading) {
     return (
       <div className="flex h-96 flex-col items-center justify-center gap-2">
         <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
-        <p className="text-sm text-muted-foreground">Loading workspace details...</p>
+        <p className="text-sm text-muted-foreground">
+          Loading workspace details...
+        </p>
       </div>
     );
   }
@@ -144,7 +149,10 @@ export default function StudioDetailsPage() {
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <h2 className="text-2xl font-bold">Studio Not Found</h2>
         <p className="text-muted-foreground mt-1">ID: {id}</p>
-        <Button render={<Link href="/studios" />} className="mt-4 bg-amber-500 text-white">
+        <Button
+          render={<Link href="/studios" />}
+          className="mt-4 bg-amber-500 text-white"
+        >
           Back to Explore
         </Button>
       </div>
@@ -154,7 +162,6 @@ export default function StudioDetailsPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <div className="container mx-auto max-w-5xl px-4 sm:px-6">
-        
         {/* Top Header & Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <Link
@@ -166,28 +173,8 @@ export default function StudioDetailsPage() {
 
           {/* Edit & Delete Host Controls */}
           <div className="flex items-center gap-2">
-            {/* <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push(`/studios/${id}/edit`)}
-              className="gap-1.5 text-xs font-semibold"
-            >
-              <Pencil className="h-3.5 w-3.5" /> Edit Studio
-            </Button> */}
             <EditStudioDialog studio={studio} />
             <DeleteStudioDialog id={id} />
-
-            {/* Delete button to delete studio dialog */}
-            {/* <Button
-              variant="destructive"
-              size="sm"
-              disabled={isDeleting}
-              onClick={handleDeleteStudio}
-              className="gap-1.5 text-xs font-semibold"
-            >
-              {isDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-              Delete Studio
-            </Button> */}
           </div>
         </div>
 
@@ -198,10 +185,13 @@ export default function StudioDetailsPage() {
               {studio.category?.replace("-", " ")}
             </Badge>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5 text-amber-500" /> {studio.location}
+              <MapPin className="h-3.5 w-3.5 text-amber-500" />{" "}
+              {studio.location}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground">{studio.title}</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground">
+            {studio.title}
+          </h1>
         </div>
 
         {/* Gallery Carousel */}
@@ -236,10 +226,8 @@ export default function StudioDetailsPage() {
 
         {/* Two Column Workspace Details */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
           {/* Left Column: Specifications, Amenities & Reviews */}
           <div className="lg:col-span-2 space-y-8">
-            
             {/* Host Details */}
             {studio.hostInfo && (
               <div className="flex items-center gap-4 p-4 rounded-xl border bg-muted/30">
@@ -248,8 +236,12 @@ export default function StudioDetailsPage() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Hosted by</p>
-                  <p className="font-bold text-sm text-foreground">{studio.hostInfo.name}</p>
-                  <p className="text-xs text-muted-foreground">{studio.hostInfo.email}</p>
+                  <p className="font-bold text-sm text-foreground">
+                    {studio.hostInfo.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {studio.hostInfo.email}
+                  </p>
                 </div>
               </div>
             )}
@@ -268,7 +260,10 @@ export default function StudioDetailsPage() {
                 <h2 className="text-xl font-bold mb-4">Included Amenities</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {studio.amenities.map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs font-medium p-2.5 rounded-lg border bg-card">
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 text-xs font-medium p-2.5 rounded-lg border bg-card"
+                    >
                       <Check className="h-4 w-4 text-emerald-500 shrink-0" />
                       <span>{item}</span>
                     </div>
@@ -282,23 +277,29 @@ export default function StudioDetailsPage() {
               <h2 className="text-xl font-bold mb-4">Creator Reviews</h2>
               <div className="space-y-4">
                 {MOCK_REVIEWS.map((rev) => (
-                  <div key={rev.id} className="p-4 rounded-xl border bg-card space-y-2">
+                  <div
+                    key={rev.id}
+                    className="p-4 rounded-xl border bg-card space-y-2"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-sm">{rev.author}</p>
-                        <p className="text-xs text-muted-foreground">{rev.role}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {rev.role}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
                         <Star className="h-3.5 w-3.5 fill-amber-400" />
                         <span>{rev.rating}.0</span>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{rev.comment}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {rev.comment}
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
-
           </div>
 
           {/* Right Column: Pricing & Book Workspace Now Button */}
@@ -307,24 +308,39 @@ export default function StudioDetailsPage() {
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <span className="text-3xl font-extrabold">${studio.rate}</span>
-                    <span className="text-xs text-muted-foreground"> / hour</span>
+                    <span className="text-3xl font-extrabold">
+                      ${studio.rate}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {" "}
+                      / hour
+                    </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">Deposit: ${studio.deposit}</span>
+                  <span className="text-xs text-muted-foreground">
+                    Deposit: ${studio.deposit}
+                  </span>
                 </div>
 
                 <div className="space-y-3 border-t border-b py-4 text-xs text-muted-foreground">
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> Max Capacity</span>
-                    <span className="font-semibold text-foreground">{studio.capacity} creators</span>
+                    <span className="flex items-center gap-1.5">
+                      <Users className="h-4 w-4" /> Max Capacity
+                    </span>
+                    <span className="font-semibold text-foreground">
+                      {studio.capacity} creators
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4" /> Host Verification</span>
-                    <span className="font-semibold text-emerald-600">Verified Host</span>
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className="h-4 w-4" /> Host Verification
+                    </span>
+                    <span className="font-semibold text-emerald-600">
+                      Verified Host
+                    </span>
                   </div>
                 </div>
 
-                <Button 
+                <Button
                   onClick={() => toast.success("Booking request submitted!")}
                   className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl gap-2 text-sm"
                 >
@@ -333,9 +349,7 @@ export default function StudioDetailsPage() {
               </CardContent>
             </Card>
           </div>
-
         </div>
-
       </div>
     </div>
   );
