@@ -33,6 +33,7 @@ const NAV_LINKS: { label: string; href: string; active?: boolean }[] = [
 
   
   { href: "#how-it-works", label: "How It Works" },
+  // { href: "#how-booking-works", label: "How It Works" },
   {  href: "#about", label: "About Us"}
 ]
 
