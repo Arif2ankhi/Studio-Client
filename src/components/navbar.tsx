@@ -25,10 +25,15 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const NAV_LINKS: { label: string; href: string; active?: boolean }[] = [
-  { label: "Home", href: "#", active: true },
-  { label: "Explore Studios", href: "#explore" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "About Us", href: "#about" },
+  { href: "/",label: "Home", active: true },
+  {href:"/add-studio", label:"Add New Studio"},
+  // { label: "Explore Studios", href: "#explore" },
+  // { label: "Explore Studios", href: "/explore" },
+  {href:"/studios", label:"Explore Studios"},
+
+  
+  { href: "#how-it-works", label: "How It Works" },
+  {  href: "#about", label: "About Us"}
 ]
 
 // Demo-only signed-in user; this project has no auth backend yet.
@@ -104,7 +109,7 @@ export function Navbar() {
                   <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
-                <Link href="/add-studio">
+                {/* <Link href="/add-studio"> */}
                  <DropdownMenuItem
                   className="gap-2.5 bg-amber-50 px-2.5 py-2 text-amber-600 hover:bg-amber-100 hover:text-amber-700 focus:bg-amber-100! focus:text-amber-700! dark:bg-amber-500/10 dark:text-amber-400 dark:hover:bg-amber-500/20 dark:focus:bg-amber-500/20! dark:focus:text-amber-300!"
                 >
@@ -112,7 +117,7 @@ export function Navbar() {
                   Add New Studio
                 </DropdownMenuItem>
 
-                </Link>
+                {/* </Link> */}
                
                 <DropdownMenuItem className="gap-2.5 px-2.5 py-2">
                   <LayoutGrid />
