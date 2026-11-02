@@ -228,6 +228,7 @@
 // }
 
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -255,8 +256,9 @@ import { authClient } from "@/lib/auth-client";
 
 const NAV_LINKS = [
   { href: "/", label: "Home", active: true },
-  { href: "/add-studio", label: "Add New Studio" },
   { href: "/studios", label: "Explore Studios" },
+  { href: "/add-studio", label: "Add New Studio" },
+  
   { href: "#how-it-works", label: "How It Works" },
   { href: "#about", label: "About Us" },
 ];

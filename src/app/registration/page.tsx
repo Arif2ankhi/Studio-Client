@@ -38,12 +38,12 @@ const handleEmailSignUp = async(e: React.SubmitEvent<HTMLElement>) =>{
     })
     if(data){
         console.log(data)
-        // toast.success("Registration successful! Please check your email to verify your account.");
+        toast.success("Registration successful! Please check your email to verify your account.");
         redirect('/')
         // toast.success("Registration successful! Please check your email to verify your account.");
     }
     if(error){
-        ToastContainer.error("Registration failed. Please try again.");
+        toast.error("Registration failed. Please try again.");
         console.log(error);
     }
 

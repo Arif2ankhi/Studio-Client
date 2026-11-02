@@ -37,6 +37,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/studios", label: "Explore Studios" },
+    { href: "/my-bookings", label: "My Bookings" },
     { href: "/how-it-works", label: "How It Works" },
     { href: "/about", label: "About Us" },
   ];

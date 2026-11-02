@@ -81,7 +81,7 @@ export default function ExploreStudiosPage() {
               Creative Space
             </span>
           </h1>
-          <p className="text-muted-foreground mb-8">
+          <p className=" text-green-800 font-semibold mb-8">
             Discover and book unique studios from local hosts.
           </p>
 
