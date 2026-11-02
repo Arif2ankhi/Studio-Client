@@ -8,9 +8,9 @@ StudioSpace is a full-stack marketplace web application built to connect creativ
 
 | Component | Repository / Live Link |
 | :--- | :--- |
-| 🌐 **Live Application** | [View Live Demo](https://your-live-client-url.vercel.app) |
-| 💻 **Client-Side Repository** | [GitHub Client Repo](https://github.com/your-username/studio-space-client) |
-| ⚙️ **Server-Side Repository** | [GitHub Server Repo](https://github.com/your-username/studio-space-server) |
+| 🌐 **Live Application** | [View Live Demo] https://studiospace-client-xi.vercel.app |
+| 💻 **Client-Side Repository** | [GitHub Client Repo]  https://github.com/Arif2ankhi/Studio-Client 
+| ⚙️ **Server-Side Repository** | [GitHub Server Repo]  https://github.com/Arif2ankhi/Studio-Server 
 
 ---
 
