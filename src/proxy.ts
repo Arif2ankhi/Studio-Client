@@ -17,13 +17,8 @@ export async function proxy(request: NextRequest) {
 
   }
   
-
-
-  
 }
 
-// Alternatively, you can use a default export:
-// export default function proxy(request: NextRequest) { ... }
 
 export const config = {
   matcher: ['/add-studio', '/my-bookings', '/my-listing', '/studios/:path', '/studios/:path' ]

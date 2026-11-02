@@ -1,16 +1,14 @@
+// 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { getFeaturedStudios } from "@/lib/studios";
-
 import { StudioCard } from "@/components/home/studio-card";
 
 /**
- * Featured Studios (dynamic): server component that loads the 6 top-rated /
- * newest spaces from MongoDB via `getFeaturedStudios()` and renders a card
- * grid. Rendered inside a <Suspense> boundary on the home page.
+ * Featured Studios Server Component: Loads 6 spaces from MongoDB via Express 
+ * and renders a 3-column card grid.
  */
 export async function FeaturedStudios() {
   const studios = await getFeaturedStudios();
@@ -28,9 +26,8 @@ export async function FeaturedStudios() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
             Top-rated studios, ready to book
           </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            The six newest and best-reviewed spaces on StudioSpace — every
-            listing is verified, insured and bookable by the hour.
+          <p className="mt-3 max-w-2xl text-muted-foreground text-sm">
+            The six newest and best creative spaces on StudioSpace — verified, insured, and bookable by the hour.
           </p>
         </div>
         <Link
@@ -44,7 +41,7 @@ export async function FeaturedStudios() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {studios.map((studio) => (
-          <StudioCard key={studio._id} studio={studio} />
+          <StudioCard key={studio._id || studio.id} studio={studio} />
         ))}
       </div>
     </section>
