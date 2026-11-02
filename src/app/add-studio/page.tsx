@@ -23,7 +23,7 @@
 //   "Podcast Lounge",
 //   "Music Suite",
 //   "Art Workshop"
-  
+
 // ];
 
 // const amenityOptions = [
@@ -89,7 +89,6 @@
 //     })
 //     const data = await res.json();
 //     console.log(data);
-
 
 //     console.log("data destination:", payload);
 //     setLoading(true);
@@ -313,9 +312,9 @@
 //             >
 //               {loading ? "Creating Listing..." : "Publish Studio Listing"}
 //             </Button>
-                  
+
 //                   </Link>
-            
+
 //           </div>
 //         </div>
 //       </form>
@@ -323,13 +322,12 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Check, Upload, Info, Loader2 } from "lucide-react";
+import { Upload, Info, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -339,9 +337,15 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { authClient } from "@/lib/auth-client";
 
@@ -350,7 +354,7 @@ const categories = [
   "Film Stage",
   "Podcast Lounge",
   "Music Suite",
-  "Art Workshop",
+  "Art Workshop"
 ];
 
 const amenityOptions = [
@@ -361,7 +365,7 @@ const amenityOptions = [
   "Air Conditioning",
   "Changing Room",
   "Kitchenette",
-  "Studio Assistant",
+  "Studio Assistant"
 ];
 
 export default function AddStudioPage() {
@@ -384,7 +388,7 @@ export default function AddStudioPage() {
 
   const hostInfo = {
     name: user?.name || "Anonymous Host",
-    email: user?.email || "host@studiospace.com",
+    email: user?.email || "host@studiospace.com"
   };
 
   const handleAmenityToggle = (item: string) => {
@@ -407,22 +411,20 @@ export default function AddStudioPage() {
       rate: Number(rate),
       deposit: Number(deposit),
       image,
-      hostInfo,
+      hostInfo
     };
 
     try {
       const res = await fetch("http://localhost:8000/add-studio", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
-        toast.success("Studio listing created!", {
-          description: "Your space is now live and ready for bookings.",
-        });
+        toast.success("Studio listing created!");
         // Navigate to My Listings page
         router.push("/my-listings");
       } else {
@@ -439,9 +441,12 @@ export default function AddStudioPage() {
   return (
     <div className="container max-w-4xl mx-auto py-10 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">List Your Workspace</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          List Your Workspace
+        </h1>
         <p className="text-muted-foreground mt-2">
-          Fill out the details below to share your creative space with our community.
+          Fill out the details below to share your creative space with our
+          community.
         </p>
       </div>
 
@@ -456,11 +461,15 @@ export default function AddStudioPage() {
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
             <div className="space-y-1">
-              <Label className="text-xs uppercase text-muted-foreground">Name</Label>
+              <Label className="text-xs uppercase text-muted-foreground">
+                Name
+              </Label>
               <p className="font-medium text-sm">{hostInfo.name}</p>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs uppercase text-muted-foreground">Email Address</Label>
+              <Label className="text-xs uppercase text-muted-foreground">
+                Email Address
+              </Label>
               <p className="font-medium text-sm">{hostInfo.email}</p>
             </div>
           </CardContent>
@@ -472,7 +481,9 @@ export default function AddStudioPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Basic Details</CardTitle>
-                <CardDescription>Give your studio a catchy name and category.</CardDescription>
+                <CardDescription>
+                  Give your studio a catchy name and category.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -488,13 +499,22 @@ export default function AddStudioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="category">Category</Label>
-                    <Select value={category} onValueChange={setCategory} required>
+
+                    <Select
+                      value={category}
+                      onValueChange={(val) => setCategory(val as string)}
+                      required
+                    >
+                      {/* <Select value={category} onValueChange={setCategory} required> */}
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
                         {categories.map((cat) => (
-                          <SelectItem key={cat} value={cat.toLowerCase().replace(" ", "-")}>
+                          <SelectItem
+                            key={cat}
+                            value={cat.toLowerCase().replace(" ", "-")}
+                          >
                             {cat}
                           </SelectItem>
                         ))}
@@ -657,5 +677,3 @@ export default function AddStudioPage() {
     </div>
   );
 }
-
-

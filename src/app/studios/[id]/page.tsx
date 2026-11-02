@@ -390,7 +390,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import EditStudioDialog from "@/components/EditStudioDialog";
 import DeleteStudioDialog from "@/components/DeleteStudioDialog";
-import MyBookingCard from "@/components/MyBookingCard";
+// import MyBookingCard from "@/components/MyBookingCard";
 import { BookingModal } from "@/components/BookingModal";
 
 interface Studio {

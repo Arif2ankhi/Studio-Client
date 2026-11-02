@@ -117,7 +117,7 @@ export function StudioCard({ studio }: { studio: Studio }) {
 
         <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-3">
           <p className="text-sm">
-            <span className="text-lg font-bold">${studio.rate}</span>{" "}
+            <span className="text-lg font-bold">${studio.hourlyRate}</span>{" "}
             <span className="text-muted-foreground">/ hr</span>
           </p>
           <Link

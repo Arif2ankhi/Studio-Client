@@ -12,7 +12,7 @@ import type { Studio } from "@/lib/types";
  */
 export const DEMO_STUDIOS: Studio[] = [
   {
-    id: "demo-lumiere-photo-loft",
+    _id: "demo-lumiere-photo-loft",
     title: "Lumière Photo Loft",
     category: "photo-studio",
     imageUrl:
@@ -23,7 +23,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Brooklyn, NY",
   },
   {
-    id: "demo-red-curtain-stage",
+    _id: "demo-red-curtain-stage",
     title: "Red Curtain Sound Stage",
     category: "sound-stage",
     imageUrl:
@@ -34,7 +34,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Atlanta, GA",
   },
   {
-    id: "demo-analog-dreams-suite",
+    _id: "demo-analog-dreams-suite",
     title: "Analog Dreams Music Suite",
     category: "music-suite",
     imageUrl:
@@ -45,7 +45,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Nashville, TN",
   },
   {
-    id: "demo-echo-chamber-podcast",
+    _id: "demo-echo-chamber-podcast",
     title: "Echo Chamber Podcast Room",
     category: "podcast-room",
     imageUrl:
@@ -56,7 +56,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Los Angeles, CA",
   },
   {
-    id: "demo-pigment-canvas",
+    _id: "demo-pigment-canvas",
     title: "Pigment & Canvas Workshop",
     category: "art-workshop",
     imageUrl:
@@ -67,7 +67,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Portland, OR",
   },
   {
-    id: "demo-golden-hour-studio",
+    _id: "demo-golden-hour-studio",
     title: "Golden Hour Photo Studio",
     category: "photo-studio",
     imageUrl:
@@ -78,7 +78,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Austin, TX",
   },
   {
-    id: "demo-sunlit-guitar-room",
+    _id: "demo-sunlit-guitar-room",
     title: "Sunlit Guitar Room",
     category: "music-suite",
     imageUrl:
@@ -89,7 +89,7 @@ export const DEMO_STUDIOS: Studio[] = [
     location: "Denver, CO",
   },
   {
-    id: "demo-brushworks",
+    _id: "demo-brushworks",
     title: "The Brushworks Studio",
     category: "art-workshop",
     imageUrl:

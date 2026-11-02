@@ -10,7 +10,6 @@ import {
   Clock,
   Loader2,
   XCircle,
-  Receipt,
   ArrowRight,
   Sparkles,
 } from "lucide-react";
@@ -44,14 +43,41 @@ export default function MyBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user?.email) return;
+  // useEffect(() => {
+  //   if (!user?.email) return;
 
-    async function fetchBookings() {
+  //   async function fetchBookings() {
+  //     try {
+  //       const res = await fetch(
+  //         `http://localhost:8000/my-bookings?email=${encodeURIComponent(
+  //           user.email
+  //         )}`
+  //       );
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         console.log('Fetching booking data', data);
+  //         setBookings(data);
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching bookings:", err);
+  //       toast.error("An error occurred. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchBookings();
+  // }, [user]);
+
+ useEffect(() => {
+    const userEmail = user?.email;
+    if (!userEmail) return;
+
+    async function fetchBookings(email: string) {
       try {
         const res = await fetch(
           `http://localhost:8000/my-bookings?email=${encodeURIComponent(
-            user.email
+            email
           )}`
         );
         if (res.ok) {
@@ -67,7 +93,7 @@ export default function MyBookingsPage() {
       }
     }
 
-    fetchBookings();
+    fetchBookings(userEmail);
   }, [user]);
 
   const handleCancelBooking = async (id: string) => {

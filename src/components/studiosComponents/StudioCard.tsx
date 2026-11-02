@@ -4,12 +4,12 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Star, ArrowRight } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Studio } from "@/lib/types/studio";
-// import { Studio } from "@/lib/types";
+// import { Studio } from "@/lib/types/studio";
+import { Studio } from "@/lib/types";
 
 interface StudioCardProps {
   studio: Studio;
@@ -28,7 +28,7 @@ export const StudioCard = ({ studio }: StudioCardProps) => {
         {/* Image Section */}
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
-            src={studio.image || "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800"}
+            src={studio?.image || "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800"}
             alt={studio.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -62,23 +62,22 @@ export const StudioCard = ({ studio }: StudioCardProps) => {
           </div>
           
           <div className="mt-4 flex items-baseline gap-1">
-            <span className="text-2xl font-black text-foreground">${studio.rate}</span>
+            {/* <span className="text-2xl font-black text-foreground">${studio.rate}</span> */}
+            <span className="text-2xl font-black text-foreground">${studio.hourlyRate}</span>
             <span className="text-muted-foreground text-sm font-medium">/ hour</span>
           </div>
         </CardContent>
 
         {/* Footer Section */}
-        <CardFooter className="p-5 pt-0">
-          <Button 
-            asChild
-            className="w-full bg-blue-500 hover:opacity-90 text-white border-none shadow-lg shadow-brand-pink/20 group/btn"
-          >
-            <Link href={`/studios/${studio._id}`}>
-              <span>View Details</span>
-              {/* <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" /> */}
-            </Link>
-          </Button>
-        </CardFooter>
+       {/* Footer Section */}
+<CardFooter className="p-5 pt-0">
+  <Link href={`/studios/${studio._id || studio._id}`} className="w-full">
+    <Button className="w-full bg-blue-500 hover:opacity-90 text-white border-none shadow-lg shadow-brand-pink/20 group/btn">
+      <span>View Details</span>
+      {/* <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" /> */}
+    </Button>
+  </Link>
+</CardFooter>
       </Card>
     </motion.div>
   );

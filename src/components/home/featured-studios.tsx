@@ -44,7 +44,7 @@ export async function FeaturedStudios() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {studios.map((studio) => (
-          <StudioCard key={studio.id} studio={studio} />
+          <StudioCard key={studio._id} studio={studio} />
         ))}
       </div>
     </section>
