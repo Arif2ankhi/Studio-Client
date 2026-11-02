@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 StudioSpace — Creative Studio Booking Marketplace
 
-## Getting Started
+StudioSpace is a full-stack marketplace web application built to connect creative professionals with studio spaces. Users can seamlessly explore, filter, host, and book verified photo studios, film stages, podcast lounges, music suites, and art workshops by the hour.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🔗 Live Links & Repositories
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Component | Repository / Live Link |
+| :--- | :--- |
+| 🌐 **Live Application** | [View Live Demo](https://your-live-client-url.vercel.app) |
+| 💻 **Client-Side Repository** | [GitHub Client Repo](https://github.com/your-username/studio-space-client) |
+| ⚙️ **Server-Side Repository** | [GitHub Server Repo](https://github.com/your-username/studio-space-server) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Key Technologies & Tech Stack
 
-## Learn More
+### Client-Side (Frontend)
+- **Framework:** Next.js (App Router) & React[cite: 1, 2]
+- **Language:** TypeScript[cite: 1, 2]
+- **Styling & UI:** Tailwind CSS, Shadcn UI, Lucide React Icons[cite: 1, 2, 6, 11]
+- **Authentication:** BetterAuth Client (`authClient`)[cite: 1, 2, 6]
 
-To learn more about Next.js, take a look at the following resources:
+### Server-Side (Backend & Database)
+- **Runtime & Framework:** Node.js & Express.js[cite: 1, 2]
+- **Database:** MongoDB Atlas (Native MongoDB Driver)[cite: 1, 2]
+- **Authentication Management:** BetterAuth Server API[cite: 1, 2]
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✨ Key Features & Highlights
 
-## Deploy on Vercel
+- **Dynamic Studio Explorer:** Browse creative spaces filtered by category, rate, location, and popularity[cite: 1, 2, 10].
+- **Featured Studios Section:** Displays real-time top listings directly from MongoDB with a responsive grid layout and graceful offline demo fallback[cite: 1, 2].
+- **Seamless Authentication:** Secure user registration, login, and session persistence managed via BetterAuth[cite: 1, 2, 6].
+- **Interactive User Dropdown:** Quick access to personalized features including studio listings, booking management, and saved wishlists[cite: 6].
+- **Add New Studio Listings:** Integrated multi-step workflow allowing hosts to publish detailed studio offerings[cite: 1, 2, 6].
+- **Smooth Navigation & UX:** Dynamic active state tracking, hash link auto-scroll (`/#how-it-works`, `/#about`), and full light/dark theme toggling[cite: 1, 2, 6, 7].
+- **Optimized Performance:** Server-Side Rendering (SSR), React Suspense boundary skeletons, and dynamic route protection[cite: 1, 2, 8].
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Project Architecture Overview
+
+```text
+├── client/ (Next.js App Router)
+│   ├── src/app/                  # Application pages, layouts, and routes
+│   │   ├── page.tsx              # Homepage with Suspense-wrapped Featured Studios
+│   │   ├── studios/              # Explore & studio detail views
+│   │   └── add-studio/           # Add new studio page
+│   ├── src/components/           # Reusable UI, Navbar, Footer, and Feature Cards
+│   └── src/lib/                  # BetterAuth client, API fetchers, and TypeScript types
+│
+└── server/ (Express & MongoDB)
+    ├── index.js                  # Express App entry point & endpoint routes
+    └── db.js                     # MongoDB connection setup
