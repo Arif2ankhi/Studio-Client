@@ -37,7 +37,7 @@ export const DEMO_STUDIOS: Studio[] = [
     _id: "demo-analog-dreams-suite",
     title: "Analog Dreams Music Suite",
     category: "music-suite",
-    imageUrl:
+    imageurl:
       "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?auto=format&fit=crop&w=1200&q=80",
     hourlyRate: 55,
     rating: 5.0,
