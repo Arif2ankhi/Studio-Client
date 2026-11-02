@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { toast } from "sonner";
-import { Check, Upload, Info, Pencil } from "lucide-react";
+import toast from "react-hot-toast";
+import { Upload, Info, Pencil } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -59,7 +59,14 @@ const amenityOptions = [
   "Studio Assistant",
 ];
 
-export default function EditStudioDialog({ studio }: { studio: StudioProps }) {
+export default function EditStudioDialog({
+  studio,
+  onUpdated,
+}: {
+  studio: StudioProps;
+  /** Called after a successful update so parent pages can refetch instead of full-reloading. */
+  onUpdated?: () => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -118,7 +125,8 @@ export default function EditStudioDialog({ studio }: { studio: StudioProps }) {
 
     setLoading(true);
 
-    const { _id, ...updatedData } = payload;
+    // `payload` already excludes the Mongo _id; send it as-is (PATCH).
+    const updatedData = payload;
     
     
     
@@ -133,16 +141,23 @@ export default function EditStudioDialog({ studio }: { studio: StudioProps }) {
         body: JSON.stringify(updatedData),
       });
 
+      if (!res.ok) {
+        throw new Error(`Update failed with status ${res.status}`);
+      }
+
       const data = await res.json();
       console.log("Updated studio response:", data);
 
-      toast.success("Studio listing updated!", {
-        description: "Your space information has been saved.",
-        icon: <Check className="h-4 w-4" />,
-      });
+      toast.success("Studio listing updated!");
 
       setOpen(false); // Close dialog on success
-      window.location.reload(); // Refresh page to display updated details
+
+      // Refresh the parent view so updated details show immediately.
+      if (onUpdated) {
+        onUpdated();
+      } else {
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Failed to update studio:", error);
       toast.error("Failed to update studio.");
@@ -153,10 +168,17 @@ export default function EditStudioDialog({ studio }: { studio: StudioProps }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5 text-xs font-semibold">
-          <Pencil className="h-3.5 w-3.5" /> Edit Studio
-        </Button>
+      <DialogTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Edit studio details"
+            className="text-blue-500 hover:bg-blue-500/10 hover:text-blue-600"
+          />
+        }
+      >
+        <Pencil className="h-4 w-4" />
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto p-6">
@@ -207,7 +229,11 @@ export default function EditStudioDialog({ studio }: { studio: StudioProps }) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="category">Category</Label>
-                      <Select value={category} onValueChange={setCategory} required>
+                      <Select
+                        value={category}
+                        onValueChange={(value) => setCategory(value ?? "")}
+                        required
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>

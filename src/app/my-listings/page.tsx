@@ -11,19 +11,33 @@ import {
   CirclePlus,
   Loader2,
   AlertTriangle,
-  Users,
+  ExternalLink,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { authClient } from "@/lib/auth-client";
 import EditStudioDialog from "@/components/EditStudioDialog";
@@ -57,32 +71,47 @@ export default function MyListingsPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Bump to re-fetch the listings after an update (no full page reload).
+  const [refreshTick, setRefreshTick] = useState(0);
+
   useEffect(() => {
-    async function fetchMyStudios() {
-      if (!user?.email) return;
+    let cancelled = false;
+    const email = user?.email;
 
-      try {
-        const res = await fetch(
-          `http://localhost:8000/my-studios?email=${encodeURIComponent(user.email)}`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setStudios(data);
+    if (email) {
+      const fetchMyStudios = async () => {
+        try {
+          const res = await fetch(
+            `http://localhost:8000/my-studios?email=${encodeURIComponent(email)}`
+          );
+          if (res.ok && !cancelled) {
+            const data = await res.json();
+            // Only show listings owned by this user (ownerEmail match).
+            setStudios(
+              data.filter(
+                (studio: Studio) =>
+                  studio.hostInfo?.email?.toLowerCase() ===
+                  email.toLowerCase()
+              )
+            );
+          }
+        } catch (err) {
+          console.error("Failed to fetch listings:", err);
+          toast.error("Failed to load your studio listings.");
+        } finally {
+          if (!cancelled) setLoading(false);
         }
-      } catch (err) {
-        console.error("Failed to fetch listings:", err);
-        toast.error("Failed to load your studio listings.");
-      } finally {
-        setLoading(false);
-      }
-    }
+      };
 
-    if (user?.email) {
       fetchMyStudios();
     } else if (!sessionLoading && !user) {
       router.push("/signin");
     }
-  }, [user, sessionLoading, router]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, sessionLoading, router, refreshTick]);
 
   // Handle Studio Deletion
   const handleDeleteConfirm = async () => {
@@ -121,15 +150,18 @@ export default function MyListingsPage() {
   return (
     <div className="min-h-screen bg-muted/20 py-10">
       <div className="container mx-auto max-w-6xl px-4">
-        
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-800 dark:bg-amber-500/15 dark:text-amber-400">
+              <Building2 className="h-3.5 w-3.5" /> Host Workspace Manager
+            </span>
+            <h1 className="mt-2 text-3xl font-extrabold tracking-tight">
               My Studio Listings
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Manage, update, and track spaces listed by <span className="font-semibold text-foreground">{user?.email}</span>
+              Manage your published creative production spaces, rates, and listings
             </p>
           </div>
 
@@ -140,78 +172,127 @@ export default function MyListingsPage() {
           </Link>
         </div>
 
-        {/* Listings Display */}
+        {/* Listings Table */}
         {studios.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {studios.map((studio) => (
-              <Card key={studio._id} className="overflow-hidden group hover:shadow-md transition-shadow">
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                  <img
-                    src={studio.image}
-                    alt={studio.title}
-                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <Badge className="absolute top-3 left-3 bg-black/70 text-white capitalize backdrop-blur">
-                    {studio.category?.replace("-", " ")}
-                  </Badge>
-                </div>
+          <Card className="overflow-hidden">
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50 hover:bg-muted/50">
+                    <TableHead>Studio Space</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Hourly Rate</TableHead>
+                    <TableHead>Deposit</TableHead>
+                    <TableHead>Capacity</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studios.map((studio) => (
+                    <TableRow key={studio._id} className="group">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+                            {studio.image && (
+                              <img
+                                src={studio.image}
+                                alt={studio.title}
+                                className="h-full w-full object-cover"
+                              />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <Link
+                              href={`/studios/${studio._id}`}
+                              className="block max-w-xs truncate font-semibold text-sm hover:text-amber-600"
+                            >
+                              {studio.title}
+                            </Link>
+                            <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground truncate">
+                              <MapPin className="h-3 w-3 text-amber-500 shrink-0" />
+                              <span className="max-w-[220px] truncate">{studio.location}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
 
-                <CardContent className="p-5 space-y-4">
-                  <div>
-                    <h2 className="font-bold text-lg leading-snug truncate">{studio.title}</h2>
-                    <p className="flex items-center gap-1 text-xs text-muted-foreground mt-1 truncate">
-                      <MapPin className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                      {studio.location}
-                    </p>
-                  </div>
+                      <TableCell>
+                        <Badge variant="outline" className="capitalize font-medium">
+                          {studio.category?.replace("-", " ")}
+                        </Badge>
+                      </TableCell>
 
-                  <div className="flex items-center justify-between border-t border-b py-3 text-xs text-muted-foreground">
-                    <div>
-                      <span className="text-base font-bold text-foreground">${studio.rate}</span>
-                      <span> / hour</span>
-                    </div>
-                    <div className="flex items-center gap-1 font-medium">
-                      <Users className="h-3.5 w-3.5" />
-                      <span>{studio.capacity} guests</span>
-                    </div>
-                  </div>
+                      <TableCell>
+                        <span className="font-bold text-amber-500">
+                          ${studio.rate}/hr
+                        </span>
+                      </TableCell>
 
-                  {/* Action Controls */}
-                  <div className="flex items-center gap-2 pt-1">
-                    {/* Integrated Edit Dialog */}
-                    <div className="flex-1">
-                      <EditStudioDialog studio={studio} />
-                    </div>
+                      <TableCell className="text-sm">
+                        ${studio.deposit}
+                      </TableCell>
 
-                    {/* Delete Trigger Button */}
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => setDeleteId(studio._id)}
-                      className="gap-1.5 text-xs font-semibold px-3"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" /> Delete
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                      <TableCell className="text-sm">
+                        {studio.capacity} people
+                      </TableCell>
+
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {/* View public listing page */}
+                          <Link href={`/studios/${studio._id}`}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              aria-label="View listing"
+                              className="text-muted-foreground hover:text-foreground"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </Link>
+
+                          {/* Update — opens the edit dialog */}
+                          <EditStudioDialog
+                            studio={studio}
+                            onUpdated={() => setRefreshTick((t) => t + 1)}
+                          />
+
+                          {/* Delete Confirmation Modal */}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Delete listing"
+                            onClick={() => setDeleteId(studio._id)}
+                            className="text-red-500 hover:bg-red-500/10 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         ) : (
-          <div className="flex flex-col items-center justify-center py-24 text-center border rounded-2xl bg-card">
-            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Building2 className="h-8 w-8 text-muted-foreground/40" />
-            </div>
-            <h3 className="text-xl font-bold">No studios listed yet</h3>
-            <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-              You haven't added any studio workspaces to your portfolio yet.
-            </p>
-            <Link href="/add-studio" className="mt-4">
-              <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold gap-2">
-                <CirclePlus className="h-4 w-4" /> Add Your First Studio
-              </Button>
-            </Link>
-          </div>
+          <Card>
+            <CardHeader className="items-center text-center pt-12">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 mb-2">
+                <Building2 className="h-8 w-8 text-amber-500" />
+              </div>
+              <CardTitle className="text-xl font-bold">No studios listed yet</CardTitle>
+              <CardDescription className="max-w-sm">
+                You haven&apos;t added any studio workspaces to your portfolio yet.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex justify-center pb-10">
+              <Link href="/add-studio">
+                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold gap-2">
+                  <CirclePlus className="h-4 w-4" /> Add Your First Studio
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         )}
 
       </div>
