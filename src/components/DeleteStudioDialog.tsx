@@ -16,7 +16,7 @@ import { redirect } from "next/navigation";
 
 const DeleteStudioDialog = ({ id }: { id: string }) => {
   const handleDeleteStudio = async () => {
-    const res = await fetch(`http://localhost:8000/studio/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${id}`, {
       method: "DELETE"
     });
 

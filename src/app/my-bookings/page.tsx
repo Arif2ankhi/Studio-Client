@@ -43,31 +43,7 @@ export default function MyBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   if (!user?.email) return;
 
-  //   async function fetchBookings() {
-  //     try {
-  //       const res = await fetch(
-  //         `http://localhost:8000/my-bookings?email=${encodeURIComponent(
-  //           user.email
-  //         )}`
-  //       );
-  //       if (res.ok) {
-  //         const data = await res.json();
-  //         console.log('Fetching booking data', data);
-  //         setBookings(data);
-  //       }
-  //     } catch (err) {
-  //       console.error("Error fetching bookings:", err);
-  //       toast.error("An error occurred. Please try again.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   fetchBookings();
-  // }, [user]);
 
  useEffect(() => {
     const userEmail = user?.email;
@@ -76,7 +52,7 @@ export default function MyBookingsPage() {
     async function fetchBookings(email: string) {
       try {
         const res = await fetch(
-          `http://localhost:8000/my-bookings?email=${encodeURIComponent(
+          `${process.env.NEXT_PUBLIC_API_URL}/my-bookings?email=${encodeURIComponent(
             email
           )}`
         );
@@ -101,7 +77,7 @@ export default function MyBookingsPage() {
 
     setCancelingId(id);
     try {
-      const res = await fetch(`http://localhost:8000/bookings/${id}/cancel`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}/cancel`, {
         method: "PATCH",
       });
 

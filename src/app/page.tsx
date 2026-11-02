@@ -8,7 +8,7 @@ import { HowBookingWorks } from "@/components/home/how-booking-works";
 import { StudioCategories } from "@/components/home/studio-categories";
 
 // Featured studios are loaded from MongoDB — refresh periodically so new
-// listings and rating changes show up without a redeploy.
+
 export const revalidate = 60;
 
 export default function Home() {

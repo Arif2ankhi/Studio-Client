@@ -1,15 +1,5 @@
 import type { Studio } from "@/lib/types";
 
-/**
- * Seed / fallback data for the `studios` MongoDB collection.
- *
- * Used in two places:
- *  - as a reference for the document shape the app expects;
- *  - as a graceful fallback so the home page still renders when MongoDB
- *    is not reachable (local dev without a database, CI, demos, ...).
- *
- * Images are high-res Unsplash assets; swap them for your own CDN URLs.
- */
 export const DEMO_STUDIOS: Studio[] = [
   {
     _id: "demo-lumiere-photo-loft",

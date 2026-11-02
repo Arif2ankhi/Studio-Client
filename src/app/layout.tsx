@@ -32,14 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        {/* Applies the persisted theme before hydration to avoid a flash of the wrong theme. */}
-        {/* <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem("studio-theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}`,
-          }}
-        /> */}
+        
         <Navbar />
         
         {children}

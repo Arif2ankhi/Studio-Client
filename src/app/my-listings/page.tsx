@@ -82,7 +82,7 @@ export default function MyListingsPage() {
       const fetchMyStudios = async () => {
         try {
           const res = await fetch(
-            `http://localhost:8000/my-studios?email=${encodeURIComponent(email)}`
+            `${process.env.NEXT_PUBLIC_API_URL}/my-studios?email=${encodeURIComponent(email)}`
           );
           if (res.ok && !cancelled) {
             const data = await res.json();
@@ -119,7 +119,7 @@ export default function MyListingsPage() {
 
     setIsDeleting(true);
     try {
-      const res = await fetch(`http://localhost:8000/studio/${deleteId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${deleteId}`, {
         method: "DELETE",
       });
 

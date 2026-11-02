@@ -132,7 +132,7 @@ export default function EditStudioDialog({
     
     try {
       // Sends PUT request to Express update endpoint
-      const res = await fetch(`http://localhost:8000/studio/${studio._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${studio._id}`, {
         method: "PATCH",
         // method: "PUT",
         headers: {
