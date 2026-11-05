@@ -17,6 +17,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog";
+
 
 interface Booking {
   _id: string;
@@ -42,6 +54,7 @@ export default function MyBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
+  const [cancelTargetId, setCancelTargetId] = useState<string | null>(null);
 
 
 
@@ -51,15 +64,24 @@ export default function MyBookingsPage() {
 
     async function fetchBookings(email: string) {
       try {
+        const token = await getTokenFromClient();
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/my-bookings?email=${encodeURIComponent(
             email
-          )}`
+          )}`,
+          {
+            headers: {
+              authorization: `Bearer ${token}`
+            }
+          }
         );
         if (res.ok) {
           const data = await res.json();
           console.log('Fetching booking data', data);
           setBookings(data);
+        } else {
+          console.error("Failed to fetch bookings, status:", res.status);
+          toast.error("Could not load your bookings. Please sign in and try again.");
         }
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -73,12 +95,14 @@ export default function MyBookingsPage() {
   }, [user]);
 
   const handleCancelBooking = async (id: string) => {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
-
     setCancelingId(id);
     try {
+      const token = await getTokenFromClient();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}/cancel`, {
         method: "PATCH",
+        headers: {
+          authorization: `Bearer ${token}`
+        },
       });
 
       if (res.ok) {
@@ -87,7 +111,8 @@ export default function MyBookingsPage() {
           prev.map((b) => (b._id === id ? { ...b, status: "Cancelled" } : b))
         );
       } else {
-        toast.error("Your booking has been cancelled.");
+        console.error("Cancel failed, status:", res.status);
+        toast.error("Could not cancel the booking. Please try again.");
       }
     } catch (err) {
       console.error("Cancel error:", err);
@@ -119,7 +144,7 @@ export default function MyBookingsPage() {
               <Sparkles className="h-3 w-3" /> Production Schedule
             </span>
             <h1 className="text-3xl font-black tracking-tight text-foreground">
-              My Studio Bookings
+              My Bookings
             </h1>
             <p className="text-xs text-muted-foreground mt-1">
               Track reservation statuses, cancellation requests, and shoot times.
@@ -230,7 +255,7 @@ export default function MyBookingsPage() {
                             variant="destructive"
                             size="sm"
                             disabled={cancelingId === booking._id}
-                            onClick={() => handleCancelBooking(booking._id)}
+                            onClick={() => setCancelTargetId(booking._id)}
                             className="h-8 text-xs font-semibold gap-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 border border-rose-200 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50"
                           >
                             {cancelingId === booking._id ? (
@@ -262,6 +287,45 @@ export default function MyBookingsPage() {
             </Link>
           </div>
         )}
+
+        {/* Cancel booking confirmation dialog */}
+        <AlertDialog
+          open={cancelTargetId !== null}
+          onOpenChange={(open) => {
+            if (!open) setCancelTargetId(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel this booking?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Your reservation will be marked as{" "}
+                <span className="font-semibold text-foreground">Cancelled</span>{" "}
+                and the time slot will be released. This action cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep Booking</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={cancelingId !== null}
+                onClick={() => {
+                  setCancelTargetId(null);
+                  if (cancelTargetId) handleCancelBooking(cancelTargetId);
+                }}
+              >
+                {cancelingId !== null ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Cancelling…
+                  </>
+                ) : (
+                  "Yes, Cancel Booking"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
       </div>
     </div>

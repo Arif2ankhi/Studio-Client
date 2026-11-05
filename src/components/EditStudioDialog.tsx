@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 import { Upload, Info, Pencil } from "lucide-react";
 import {
   Dialog,
@@ -132,10 +133,12 @@ export default function EditStudioDialog({
     
     try {
       // Sends PUT request to Express update endpoint
+      const token = await getTokenFromClient();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${studio._id}`, {
         method: "PATCH",
         // method: "PUT",
         headers: {
+          authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedData),

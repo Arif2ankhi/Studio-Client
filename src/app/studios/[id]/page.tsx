@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -23,6 +22,13 @@ import EditStudioDialog from "@/components/EditStudioDialog";
 import DeleteStudioDialog from "@/components/DeleteStudioDialog";
 // import MyBookingCard from "@/components/MyBookingCard";
 import { BookingModal } from "@/components/BookingModal";
+import { auth } from "@/lib/auth";
+// import { headers } from "next/headers";
+import { getTokenServer } from "@/lib/getTokenFromServer";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+// import { headers } from "next/headers"
+// import { auth } from "@/lib/auth";
+// import { getTokenServer } from "@/lib/getTokenFromServer"
 
 interface Studio {
   _id: string;
@@ -76,7 +82,20 @@ export default function StudioDetailsPage() {
   useEffect(() => {
     async function fetchStudioDetails() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${id}`);
+
+
+    const token = await getTokenFromClient()
+
+    console.log(token);
+
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${id}`,{
+
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+      
+        });
         if (res.ok) {
           const data = await res.json();
           setStudio(data);

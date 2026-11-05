@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 import {
   Building2,
   Trash2,
@@ -81,8 +82,14 @@ export default function MyListingsPage() {
     if (email) {
       const fetchMyStudios = async () => {
         try {
+          const token = await getTokenFromClient();
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/my-studios?email=${encodeURIComponent(email)}`
+            `${process.env.NEXT_PUBLIC_API_URL}/my-studios?email=${encodeURIComponent(email)}`,
+            {
+              headers: {
+                authorization: `Bearer ${token}`
+              }
+            }
           );
           if (res.ok && !cancelled) {
             const data = await res.json();
@@ -119,8 +126,12 @@ export default function MyListingsPage() {
 
     setIsDeleting(true);
     try {
+      const token = await getTokenFromClient();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${deleteId}`, {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${token}`
+        },
       });
 
       if (res.ok) {

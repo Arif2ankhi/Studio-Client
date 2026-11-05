@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Users, ShieldCheck, Calendar, User, Check, Star, Loader2 } from "lucide-react";
+import { Users, ShieldCheck, Calendar, User, Check, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookingModal } from "@/components/BookingModal";

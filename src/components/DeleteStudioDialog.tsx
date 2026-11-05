@@ -12,12 +12,17 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 import { redirect } from "next/navigation";
 
 const DeleteStudioDialog = ({ id }: { id: string }) => {
   const handleDeleteStudio = async () => {
+    const token = await getTokenFromClient();
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/studio/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${token}`
+      }
     });
 
     const data = await res.json();

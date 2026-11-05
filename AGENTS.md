@@ -10,44 +10,47 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # studio-client
 
-Next.js 16 App Router frontend for "StudioSpace", a studio-rental marketplace. Two separate data flows:
+Next.js 16 App Router frontend for "StudioSpace", a studio-rental marketplace. Frontend of a two-repo project: a separate Express + MongoDB backend (repo & live links in `README.md`) backs every page. Server-side rendering happens here, but all studio/booking data flows through that backend.
 
-- **External REST backend, hard-coded at `http://localhost:8000`** (a separate project — not this repo) backs every page except the home page. Endpoints used: `/studios`, `/studio/:id` (GET/PUT/DELETE), `/add-studio` (POST), `/my-studios?email=`, `/my-bookings?email=`, `/bookings` (POST), `/bookings/:id/cancel`. Those URLs are literal strings in `src/app/*` and `src/components/*` — no env var, no proxy.
-- **Direct MongoDB reads (server-side)** only for the home page's featured studios: `src/lib/studios.ts` → `src/lib/mongodb.ts` (`.find().sort().limit(6)`, 1.5 s server-selection timeout, falls back to `src/lib/demo-studios.ts` when the DB is unreachable/empty). Home page sets `revalidate = 60` and streams the grid behind `<Suspense>` (skeleton: `src/components/home/featured-studios-skeleton`).
+## Data flow (backend = separate repo)
 
-The only Next.js API route is `src/app/api/auth/[...all]/route.ts` (better-auth catch-all). Don't add data endpoints here assuming the pages consume them — they hit `localhost:8000`.
-
-Routes: `/` (server), `/studios`, `/studios/[id]`, `/add-studio`, `/my-bookings`, `/my-listings`, `/signin`, `/registration`. Most pages are large `"use client"` components containing big blocks of commented-out dead code at the top — that's their status quo, not something to clean up unprompted.
+- Every page fetches from `${process.env.NEXT_PUBLIC_API_URL}` (`.env` default: `http://localhost:8000`). Endpoints used: `/studios`, `/studio/:id` (GET/PUT/DELETE), `/add-studio` (POST), `/my-studios?email=`, `/my-bookings?email=`, `/bookings` (POST), `/bookings/:id/cancel`, `/featured-studios`.
+- Listings and bookings are keyed by the signed-in user's **email**; several pages fall back to hardcoded demo emails when nobody is signed in.
+- Home page is a server component (`revalidate = 60`) streaming `FeaturedStudios` behind `<Suspense>` (skeleton: `src/components/home/featured-studios-skeleton`). It calls `getFeaturedStudios` in **`src/lib/studios.ts`** → REST `/featured-studios` with `cache: "no-store"`, falling back to `DEMO_STUDIOS` (`src/lib/demo-studios.ts`) when unreachable/empty.
+- The only Next.js API route is the better-auth catch-all `src/app/api/auth/[...all]/route.ts`. Don't add data endpoints here — pages hit the external backend.
+- `src/lib/mongodb.ts` (direct Mongo reads, `MONGODB_DB` default `studio-space`) is currently imported by nothing. Do not wire it back in unless asked.
 
 ## Auth (better-auth)
 
-- Server config `src/lib/auth.ts` (email+password + Google OAuth, MongoDB adapter); client `src/lib/auth-client.ts` (`baseURL` from `BETTER_AUTH_URL`). Auth endpoints mount at `/api/auth/[...all]`.
-- Env keys in `.env`: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `MONGODB_URI`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`.
-- **Two different databases**: `auth.ts` hardcodes `client.db("studiospace")`; `src/lib/mongodb.ts` uses `MONGODB_URI`/`MONGODB_DB` (default `studio-space`). Auth data and studio data do not live in the same DB out of the box.
+- Server config `src/lib/auth.ts` (email+password + Google OAuth, MongoDB adapter); client `src/lib/auth-client.ts` (`baseURL` from `BETTER_AUTH_URL`, JWT plugin). Auth endpoints mount at `/api/auth/[...all]`.
+- Auth data lives in DB `studiospace` (hardcoded in `auth.ts`), separate from the backend's app data — don't assume one database.
+- Token helpers: `src/lib/getTokenFromClient.ts` (`authClient.token()`, used by `studios/[id]` for authorized PUT/DELETE) and `src/lib/getTokenFromServer.ts` (server-side `auth.api.getToken`); the server helper is currently imported-but-unused there.
+- **Route protection lives in `src/proxy.ts`** — Next 16 renamed `middleware.ts` to `proxy.ts`. Its matcher has drifted from real routes (`/my-listing` vs actual `/my-listings`) and the handler returns `undefined` when authenticated. Don't assume protected routes are truly enforced; if touching auth flow, check both `proxy.ts` and per-page behavior.
 
 ## Commands (verified)
 
 - `npm run dev` — Turbopack dev server, port 3000. Also (re)generates the agent-rules block above.
 - `npm run build` / `npm run start`
-- `npm run lint` — ESLint 9 flat config, runs with no args. **Baseline is not clean: 6 pre-existing errors** — `react-hooks/set-state-in-effect` in `src/components/ui/carousel.tsx` (:98), `src/hooks/use-mobile.ts` (:14), `src/components/EditStudioDialog.tsx` (:80), and `react/no-unescaped-entities` in `src/app/my-listings/page.tsx` (:207) and `src/app/studios/page.tsx` (:169, twice). ~19 warnings (unused imports, `<img>`). Compare the list against this baseline rather than assuming either clean or newly-broken.
-- No test runner and no `typecheck` script. `npx tsc --noEmit` currently **fails with 14 pre-existing type errors** in the newer pages/components (add-studio, my-bookings, studios, studios/[id], EditStudioDialog — mostly `Studio`-shape mismatches, Base UI Select passing `null`, one `asChild`, and a broken import of `@/components/MyBookingCard`, whose real file is `src/components/MyBooking Card.tsx` — **space in the filename**). Don't chase "typecheck green"; diff against the baseline list. (`README.md` is still the default create-next-app file. No CI workflow — don't invent test commands.)
-- **Typecheck on a fresh clone fails until `npm run dev` or `npm run build` has run once**: `next-env.d.ts` imports `.next/types/routes.d.ts`; the global `PageProps`/`LayoutProps` types live there. Both `next-env.d.ts` and `*.tsbuildinfo` are gitignored generated artifacts — don't commit or hand-edit them.
+- `npm run lint` — ESLint 9 flat config, runs with no args. **Baseline is not clean: 5 pre-existing errors** — `react-hooks/set-state-in-effect` at `src/components/ui/carousel.tsx` (:98), `src/hooks/use-mobile.ts` (:14), `src/components/EditStudioDialog.tsx` (:87), and `react/no-unescaped-entities` at `src/app/studios/page.tsx` (:169, twice). Plus 14 warnings (unused imports/vars, `<img>`). Compare failures against this list rather than assuming clean or newly-broken.
+- No test runner and no `typecheck` script, but `npx tsc --noEmit` currently **passes clean**. If it fails after a fresh clone, run `npm run dev` or `npm run build` once first: `next-env.d.ts` imports `.next/types/routes.d.ts`, where the global `PageProps`/`LayoutProps` types live. `.next/`, `next-env.d.ts`, and `*.tsbuildinfo` are gitignored generated artifacts — don't commit or hand-edit them.
 
-Verify changes with: `npm run lint` → `npx tsc --noEmit`, comparing failures against the baselines above.
+Verify changes with: `npm run lint` → `npx tsc --noEmit`, comparing failures against the baseline above.
 
 ## Traps
 
-- **Base UI, not Radix — there is no `asChild`.** The shadcn base-nova components wrap `@base-ui/react`; compose with the `render` prop or by nesting children directly (see `src/components/navbar.tsx` for correct usage). `src/components/EditStudioDialog.tsx` still uses `asChild` — part of the tsc-error baseline; fix it to `render`-style rather than adding `asChild` support to `ui/*`.
-- **Two distinct Navbar components** — `src/components/navbar.tsx` (lowercase) is the live one in `layout.tsx` and is wired to the real auth session (`authClient.useSession()`, header avatar/sign-out); `src/components/shared/Navbar.tsx` is mock-auth and rendered by no route. `layout.tsx` already renders Navbar + `shared/Footer` — re-wiring anything else would double-render headers.
-- **Three toast libraries coexist**: `react-hot-toast` (used by most pages), `react-toastify` (its `<ToastContainer />` is the one rendered in `layout.tsx`), and `sonner`. Don't assume `toast.success` from one lib shows up in the rendered container.
-- **Theme is hand-rolled, not next-themes**: `src/hooks/use-theme.ts` is an external store (`useSyncExternalStore` reading the `.dark` class off `<html>`, persisting to `localStorage["studio-theme"]`), toggled by `src/components/theme-toggle.tsx`. The pre-hydration init script in `layout.tsx` that applies the persisted theme on load is **currently commented out** — its absence is deliberate-looking state, not a bug to silently re-add or re-delete.
+- **Base UI, not Radix — there is no `asChild`.** shadcn base-nova components wrap `@base-ui/react`; compose with the `render` prop or by nesting children directly (see `src/components/navbar.tsx` for correct usage).
+- **Two Navbar components**: `src/components/navbar.tsx` (lowercase) is the live one, wired to the real session (`authClient.useSession()`, header avatar/sign-out). `src/components/shared/Navbar.tsx` is mock-auth and imported by nothing. `layout.tsx` already renders Navbar + `shared/Footer` — wiring another header would double-render.
+- **Toast mounts are odd**: `layout.tsx` renders react-toastify's `<ToastContainer />` **and two** `<Toaster />` from react-hot-toast (duplicated — status quo, don't silently "fix"). Pages use `react-hot-toast`; `sonner` is also a dependency but not mounted. Don't assume a call from one lib appears in every mounted container.
+- **Two `Studio` types**: the canonical one is `@/lib/types` — a loose superset (`_id?`/`id?`, `image`/`imageUrl`, `rate`/`hourlyRate`) matching the backend's evolving document shape. `src/lib/types/studio.ts` is stricter and unreferenced. Use `@/lib/types`.
+- **Dead siblings coexist with live code**: `src/lib/featured.ts` is an unused near-duplicate of `src/lib/studios.ts`; `src/components/MyBooking Card.tsx` (filename contains a space) is unreferenced. Most pages are large `"use client"` files with big blocks of commented-out dead code at the top — that's their status quo, not something to clean up unprompted.
+- **Theme is hand-rolled, not next-themes**: `src/hooks/use-theme.ts` is an external store (`useSyncExternalStore` reading the `.dark` class off `<html>`, persisting to `localStorage["studio-theme"]`), toggled by `src/components/theme-toggle.tsx`. There is no pre-hydration init script in `layout.tsx`, so the page flashes from light on reload — deliberate-looking state, not a bug to silently "fix".
 - React Compiler is enabled (`reactCompiler: true` in `next.config.ts`) — no hand-rolled `memo`/`useMemo`/`useCallback` needed.
-- Tailwind CSS v4: **no `tailwind.config.*`**. Theme tokens live in `src/app/globals.css` (`@theme inline` + CSS variables); dark mode is the `.dark` class via `@custom-variant`; CSS is served through the Turbopack loader rule in `next.config.ts`. `globals.css` also imports `tw-animate-css` and `shadcn/tailwind.css` (from the `shadcn` dependency). Don't reintroduce a JS Tailwind config.
-- Path alias `@/*` → `src/*`. Entrypoints: `src/app/layout.tsx` and `src/app/page.tsx`. Bundled Next.js docs: `node_modules/next/dist/docs/` (see top block). `next.config.ts` also allows `images.remotePatterns` for hostname `**` (any https host).
+- Tailwind CSS v4: **no `tailwind.config.*`**. Theme tokens live in `src/app/globals.css` (`@theme inline` + CSS variables); dark mode is the `.dark` class via `@custom-variant`; CSS is served through the Turbopack loader rule in `next.config.ts`. Don't reintroduce a JS Tailwind config.
+- `next.config.ts` allows `images.remotePatterns` hostname `**` (any https host) — external CDN images paste straight in.
+- Path alias `@/*` → `src/*`. Entrypoints: `src/app/layout.tsx` and `src/app/page.tsx`.
 
 ## shadcn / UI kit
 
-- `src/components/ui/*` is shadcn-generated (CLI v4, style `base-nova`, config in `components.json`). Treat as generated — hand-edits are overwritten by the next `npx shadcn add <component>`. Files check out byte-identical to registry output; verify drift with `npx shadcn add <component> --dry-run` (prints `skip (identical)` or a `--diff`).
+- `src/components/ui/*` is shadcn-generated (CLI v4, style `base-nova`, config in `components.json`). Treat as generated — hand-edits are overwritten by the next `npx shadcn add <component>`. Verify drift with `npx shadcn add <component> --dry-run` (prints `skip (identical)` or a `--diff`).
 - The code-highlighting files are also registry-generated (owned by the `code-block` component): `src/lib/highlighter.tsx` and `src/hooks/use-highlighted-code.ts`. The hook deliberately re-tokenizes only newly completed lines, carrying Shiki grammar state forward — don't "simplify" it into re-highlighting the whole buffer. An unlisted language silently renders plain text; add it to the `languages`/`aliases` maps in `highlighter.tsx` to support it.
 - `cn` is the npm `cn` package: `import { cn } from "cn"` (also re-exported from `@/lib/utils`). It is **not** the usual `clsx` + `tailwind-merge` combo.
-- Icons: `lucide-react`.

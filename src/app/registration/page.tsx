@@ -17,12 +17,10 @@ import {
 import { Input } from "@/components/ui/input"
 // import { toast } from "@/components/ui/toast";
 import { authClient } from "@/lib/auth-client";
-// import { Toast } from "@base-ui/react";
 import Link from "next/link"
 import { redirect } from "next/navigation";
-// import { ToastContainer } from "react-toastify";
-// import { toast } from "sonner";
 import toast from "react-hot-toast";
+
 
 
 export default function Registration() {
@@ -38,24 +36,54 @@ const handleEmailSignUp = async(e: React.SubmitEvent<HTMLElement>) =>{
     })
     if(data){
         console.log(data)
-        toast.success("Registration successful! Please check your email to verify your account.");
+        toast.success("Registration successful! Please check your email to verify your account." );
         redirect('/')
-        // toast.success("Registration successful! Please check your email to verify your account.");
+        
     }
     if(error){
-        toast.error("Registration failed. Please try again.");
-        console.log(error);
+        // toast.add({ description:"Registration failed. Please try again."});
+        toast.error("Something is wrong , please try again later ")
+        // console.log(error);
     }
 
 }
 
 
-const handleGoogleSignIn = async() =>{
-    const data  = await authClient.signIn.social({
-        provider: "google",
-    })
-    console.log(data)
-}
+// const handleGoogleSignIn = async() =>{
+//     const data  = await authClient.signIn.social({
+//         provider: "google",
+//     })
+
+//     if(data){
+//       toast.success("Successfully signup with Google.");
+//       console.log(data)
+//     }
+//     if (error){
+//       toast.error(" Google sign up failed" );
+//       console.log(error);
+
+//     }
+
+
+
+//     // console.log(data)
+// }
+const handleGoogleSignIn = async () => {
+  // Destructure both data and error from the response
+  const { data, error } = await authClient.signIn.social({
+    provider: "google",
+  });
+
+  if (data) {
+    toast.success("Successfully signed up with Google.");
+    console.log(data);
+  }
+
+  if (error) {
+    toast.error("Google sign up failed");
+    console.log(error);
+  }
+};
 
 
   return (
@@ -64,7 +92,7 @@ const handleGoogleSignIn = async() =>{
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+            Login with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>

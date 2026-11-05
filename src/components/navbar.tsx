@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import {
   Aperture,
   CalendarDays,
+  Camera,
   ChevronDown,
   CirclePlus,
   Heart,
   LayoutGrid,
   LogOut,
+  Monitor,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -24,12 +26,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 const NAV_LINKS = [
   { href: "/", label: "Home", active: true },
   { href: "/studios", label: "Explore All Studios" },
-  { href: "/add-studio", label: "Add New Studio" },
-  
+  { href: "/add-studio", label: "Add Studio" },
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#about", label: "About Us" },
 ];
@@ -56,6 +58,7 @@ export function Navbar() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          toast.error("User Signed out Successfully")
           router.push("/");
           router.refresh();
         },
@@ -70,7 +73,7 @@ export function Navbar() {
         {/* Brand / Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="relative flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500">
-            <Aperture className="size-5 text-zinc-900" />
+            <Monitor className="size-5 text-zinc-900" />
             <span className="absolute -top-0.5 -right-0.5 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
           </span>
           <span className="flex flex-col leading-none">
@@ -78,7 +81,7 @@ export function Navbar() {
               Studio <span className="text-amber-500">Space</span>
             </span>
             <span className="mt-1 text-[10px] font-medium tracking-[0.18em] text-muted-foreground">
-              CREATIVE MARKETPLACE
+              BEYOND BORDERS 
             </span>
           </span>
         </Link>

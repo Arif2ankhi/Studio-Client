@@ -4,7 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { A11y, Autoplay, Keyboard, Navigation, Pagination } from "swiper/modules";
+import {
+  A11y,
+  Autoplay,
+  Keyboard,
+  Navigation,
+  Pagination
+} from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { cn } from "cn";
@@ -31,8 +37,9 @@ const SLIDES: HeroSlide[] = [
     subtitle:
       "Photo studios, sound stages, podcast rooms and music suites — verified, equipped and bookable in minutes.",
     image:
-      "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1920&q=80",
-    imageAlt: "Warmly lit music studio with guitars and a mixing desk",
+      "https://images.unsplash.com/photo-1589903308904-1010c2294adc?auto=format&fit=crop&w=1920&q=80",
+
+    imageAlt: "Warmly lit music studio with guitars and a mixing desk"
   },
   {
     eyebrow: "Film & photo ready",
@@ -42,7 +49,7 @@ const SLIDES: HeroSlide[] = [
       "Blackbox stages with lighting grids, cyc walls and grip gear on standby. Load in today, shoot tomorrow.",
     image:
       "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1920&q=80",
-    imageAlt: "Performers silhouetted against a deep red stage curtain",
+    imageAlt: "Performers silhouetted against a deep red stage curtain"
   },
   {
     eyebrow: "Podcast & music spaces",
@@ -51,9 +58,10 @@ const SLIDES: HeroSlide[] = [
     subtitle:
       "Acoustically treated rooms, broadcast-grade mics and engineers on request — your next episode starts here.",
     image:
-      "https://images.unsplash.com/photo-1589903308904-1010c2294adc?auto=format&fit=crop&w=1920&q=80",
-    imageAlt: "Studio condenser microphone and headphones in front of a DAW",
-  },
+      // "https://images.unsplash.com/photo-1589903308904-1010c2294adc?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1793187364101-e95a25b285f9?auto=format&fit=crop&w=1920&q=80h",
+    imageAlt: "Studio condenser microphone and headphones in front of a DAW"
+  }
 ];
 
 /**
@@ -86,13 +94,22 @@ export function HeroSlider() {
         loop
         grabCursor
         keyboard={{ enabled: true }}
-        autoplay={{ delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+        autoplay={{
+          delay: 5500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true
+        }}
         pagination={{ clickable: true }}
         navigation={{}}
         onBeforeInit={(swiper) => {
           // Wire Swiper's navigation up to our custom (Tailwind-styled) arrows.
           const nav = swiper.params.navigation;
-          if (nav && typeof nav === "object" && prevRef.current && nextRef.current) {
+          if (
+            nav &&
+            typeof nav === "object" &&
+            prevRef.current &&
+            nextRef.current
+          ) {
             nav.prevEl = prevRef.current;
             nav.nextEl = nextRef.current;
           }
@@ -137,9 +154,9 @@ export function HeroSlider() {
                       Explore Studios
                       <ArrowRight className="ml-1 size-4" />
                     </Link>
-                    <Link href="/studios" className={secondaryCtaClass}>
+                    {/* <Link href="/studios" className={secondaryCtaClass}>
                       Host Your Space
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
